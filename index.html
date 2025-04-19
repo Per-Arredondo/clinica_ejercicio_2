@@ -165,4 +165,56 @@
       <select name="Especialidad" required>
         <option value="">Selecciona</option>
         <option value="Ginecología">Ginecología</option>
-        <option value="Obstetricia">Ob
+        <option value="Obstetricia">Obstetricia</option>
+        <option value="Pediatría">Pediatría</option>
+        <option value="Medicina General">Medicina General</option>
+      </select>
+      <label>Fecha*</label>
+      <input type="date" name="Fecha" required>
+      <label>Hora*</label>
+      <input type="time" name="Hora" required>
+      <label>Comentarios adicionales</label>
+      <textarea name="Comentarios adicionales"></textarea>
+      <button type="submit">Agendar Cita</button>
+      <div class="success" id="mensaje-exito" style="display:none;">👍 Gracias, tu cita ha sido agendada.<br>⏳ Redirigiendo al inicio...<br>🎉 Te contactaremos pronto.</div>
+    </form>
+  </section>
+
+  <script>
+    // Acordeón
+    const botones = document.querySelectorAll(".accordion-button");
+    botones.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const content = btn.nextElementSibling;
+        content.style.display = content.style.display === "block" ? "none" : "block";
+      });
+    });
+
+    // Formulario y conexión a Google Sheets
+    const form = document.getElementById("cita-form");
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const data = new FormData(form);
+      fetch("https://script.google.com/macros/s/AKfycbxg3dHywQY8JF04SYlZBqakAKR97KHDk40epmzi7f6zw5_5uD8SC91eOIL9aJ2JnZEo/exec", {
+        method: "POST",
+        body: data
+      })
+      .then(response => {
+        if (response.ok) {
+          const mensaje = document.getElementById("mensaje-exito");
+          mensaje.style.display = "block";
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          setTimeout(() => mensaje.style.display = "none", 5000);
+          form.reset();
+        } else {
+          alert("Error al enviar. Inténtalo de nuevo.");
+        }
+      })
+      .catch(error => {
+        alert("Hubo un error al enviar el formulario. Intenta de nuevo más tarde.");
+        console.error("Error:", error);
+      });
+    });
+  </script>
+</body>
+</html>
